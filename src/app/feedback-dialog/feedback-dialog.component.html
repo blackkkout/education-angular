@@ -1,0 +1,36 @@
+<form [formGroup]="feedbackForm" (submit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field class="feedback-input">
+      <textarea
+        matInput
+        formControlName="feedback"
+        placeholder="Your feedback..."
+      ></textarea>
+      @if (feedbackForm.controls.feedback.hasError('required')) {
+      <mat-error>Feedback is required</mat-error>
+      } @else if (feedbackForm.controls.feedback.hasError('minlength')) {
+      <mat-error>Feedback must be at least 10 characters long</mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions class="feedback-bottom">
+    <mat-button-toggle-group formControlName="satisfaction">
+      <mat-button-toggle value="happy">
+        <mat-icon fontIcon="mood" />
+      </mat-button-toggle>
+      <mat-button-toggle value="satisfied">
+        <mat-icon fontIcon="sentiment_satisfied" />
+      </mat-button-toggle>
+      <mat-button-toggle value="dissatisfied">
+        <mat-icon fontIcon="sentiment_dissatisfied" />
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    <button
+      mat-flat-button
+      type="submit"
+      [disabled]="feedbackForm.invalid || status() === 'pending'"
+    >
+      Send
+    </button>
+  </mat-dialog-actions>
+</form>
