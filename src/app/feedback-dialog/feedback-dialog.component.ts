@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -18,8 +18,8 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { FeedbackDialogService } from './feedback-dialog.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FeedbackDialogService } from './feedback-dialog.service';
 
 @Component({
   selector: 'feedback-dialog',
@@ -70,6 +70,11 @@ export class FeedbackDialogComponent {
             this.status.set('success');
             this.dialogRef.close();
             this.snackBar.open('Thank you for your feedback!');
+          } else if (response.status === 'error') {
+            this.status.set('error');
+            this.snackBar.open(
+              'An error occurred while sending your feedback.'
+            );
           }
         });
     }
