@@ -14,12 +14,9 @@ export class FeedbackDialogService {
     feedback: string,
     satisfaction: string
   ): Observable<FeedbackResponse> {
-    return this.http.post<FeedbackResponse>(
-      'https://demo5931952.mockable.io/feedback',
-      {
-        feedback,
-        satisfaction,
-      }
-    );
+    return this.http.post<FeedbackResponse>('/feedback', {
+      feedback,
+      satisfaction,
+    });
   }
 }
