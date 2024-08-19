@@ -68,10 +68,11 @@ export class FeedbackDialogComponent {
         .subscribe((response) => {
           if (response.status === 'success') {
             this.status.set('success');
-            this.dialogRef.close();
+            this.dialogRef.close(this.status());
             this.snackBar.open('Thank you for your feedback!');
           } else {
             this.status.set('error');
+            this.dialogRef.close(this.status());
             this.snackBar.open(
               'An error occurred while sending your feedback.'
             );

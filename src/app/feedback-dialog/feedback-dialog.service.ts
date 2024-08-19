@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, timeout } from 'rxjs';
+import { Observable } from 'rxjs';
 
 type FeedbackResponse = {
   status: 'success' | 'error';
