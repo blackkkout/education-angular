@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 
 type FeedbackResponse = {
   status: 'success' | 'error';
@@ -14,12 +14,11 @@ export class FeedbackDialogService {
     feedback: string,
     satisfaction: string
   ): Observable<FeedbackResponse> {
-    return this.http.post<FeedbackResponse>(
-      'http://demo5931952.mockable.io/feedback',
-      {
+    return this.http
+      .post<FeedbackResponse>('http://demo5931952.mockable.io/feedback', {
         feedback,
         satisfaction,
-      }
-    );
+      })
+      .pipe(timeout(3000));
   }
 }

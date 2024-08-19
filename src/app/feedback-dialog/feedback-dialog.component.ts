@@ -70,7 +70,7 @@ export class FeedbackDialogComponent {
             this.status.set('success');
             this.dialogRef.close();
             this.snackBar.open('Thank you for your feedback!');
-          } else if (response.status === 'error') {
+          } else {
             this.status.set('error');
             this.snackBar.open(
               'An error occurred while sending your feedback.'
