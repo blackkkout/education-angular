@@ -10,11 +10,17 @@ type FeedbackResponse = {
 export class FeedbackDialogService {
   readonly http = inject(HttpClient);
 
-  sendFeedback(
-    feedback: string,
-    satisfaction: string
-  ): Observable<FeedbackResponse> {
+  sendFeedback({
+    name,
+    feedback,
+    satisfaction,
+  }: {
+    name: string;
+    feedback: string;
+    satisfaction: string;
+  }): Observable<FeedbackResponse> {
     return this.http.post<FeedbackResponse>('/feedback', {
+      name,
       feedback,
       satisfaction,
     });

@@ -50,6 +50,7 @@ export class FeedbackDialogComponent {
   );
 
   readonly feedbackForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
     feedback: new FormControl('', [
       Validators.required,
       Validators.minLength(10),
@@ -61,10 +62,11 @@ export class FeedbackDialogComponent {
     if (this.feedbackForm.valid) {
       this.status.set('pending');
       this.feedbackService
-        .sendFeedback(
-          this.feedbackForm.value.feedback!,
-          this.feedbackForm.value.satisfaction!
-        )
+        .sendFeedback({
+          name: this.feedbackForm.value.name!,
+          feedback: this.feedbackForm.value.feedback!,
+          satisfaction: this.feedbackForm.value.satisfaction!,
+        })
         .subscribe((response) => {
           if (response.status === 'success') {
             this.status.set('success');

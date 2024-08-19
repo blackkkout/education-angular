@@ -1,6 +1,13 @@
 <form [formGroup]="feedbackForm" (submit)="onSubmit()">
   <mat-dialog-content>
     <mat-form-field class="feedback-input">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="Your name..." />
+      @if (feedbackForm.controls.name.hasError('required')) {
+      <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="feedback-input">
       <textarea
         matInput
         formControlName="feedback"
