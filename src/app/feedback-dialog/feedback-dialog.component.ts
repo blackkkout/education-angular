@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { filter, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {
@@ -17,10 +17,10 @@ import {
   MatDialogContent,
   MatDialogRef,
 } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FeedbackDialogService } from './feedback-dialog.service';
 
@@ -40,13 +40,13 @@ import { FeedbackDialogService } from './feedback-dialog.service';
     MatInputModule,
     MatButtonToggleModule,
     MatIcon,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './feedback-dialog.component.html',
   styleUrl: './feedback-dialog.component.css',
 })
 export class FeedbackDialogComponent {
   readonly dialogRef = inject(MatDialogRef<FeedbackDialogComponent>);
-  readonly snackBar = inject(MatSnackBar);
   readonly feedbackService = inject(FeedbackDialogService);
 
   readonly status = toSignal(this.feedbackService.getStatus());
@@ -68,19 +68,7 @@ export class FeedbackDialogComponent {
           feedback: this.feedbackForm.value.feedback!,
           satisfaction: this.feedbackForm.value.satisfaction!,
         })
-        .pipe(
-          tap(() => {
-            if (this.status() === 'success') {
-              this.snackBar.open('Thank you for your feedback!');
-              this.dialogRef.close('success');
-            } else {
-              this.snackBar.open(
-                'An error occurred while sending your feedback.'
-              );
-              this.dialogRef.close('error');
-            }
-          })
-        )
+        .pipe(tap(() => this.dialogRef.close(this.status())))
         .subscribe();
     }
   }

@@ -34,10 +34,13 @@
     </mat-button-toggle-group>
     <button
       type="submit"
+      class="feedback-button"
       mat-flat-button
       [disabled]="feedbackForm.invalid || status() === 'pending'"
     >
-      Send
+      @if(status() === 'pending') {
+      <mat-spinner diameter="20"></mat-spinner>
+      } @else { Send }
     </button>
   </mat-dialog-actions>
 </form>

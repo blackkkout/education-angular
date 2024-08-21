@@ -5,3 +5,7 @@
 .feedback-bottom {
   justify-content: space-between;
 }
+
+.feedback-button {
+  width: 70px;
+}

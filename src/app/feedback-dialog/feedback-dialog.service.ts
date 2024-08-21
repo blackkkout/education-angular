@@ -1,6 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  delay,
+  EMPTY,
+  Observable,
+  tap,
+} from 'rxjs';
 
 type Status = 'initial' | 'pending' | 'success' | 'error';
 type FeedbackResponse = { status: 'success' | 'error' };
@@ -23,22 +30,17 @@ export class FeedbackDialogService {
     name: string;
     feedback: string;
     satisfaction: string;
-  }): Observable<void> {
+  }): Observable<FeedbackResponse> {
     this.status$.next('pending');
 
     return this.http
       .post<FeedbackResponse>('/feedback', { name, feedback, satisfaction })
       .pipe(
-        map((response) => {
-          if (response.status === 'success') {
-            this.status$.next('success');
-          } else {
-            this.status$.next('error');
-          }
-        }),
+        delay(2000),
+        tap(() => this.status$.next('success')),
         catchError(() => {
           this.status$.next('error');
-          return of();
+          return EMPTY;
         })
       );
   }
