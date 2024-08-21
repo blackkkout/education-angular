@@ -1,21 +1,22 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FeedbackDialogComponent } from '../feedback-dialog/feedback-dialog.component';
 
+type DialogStatus = 'success' | 'error' | null;
+
 @Component({
   selector: 'home',
   standalone: true,
-  imports: [RouterOutlet, MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
   readonly dialog = inject(MatDialog);
 
-  readonly dialogResult = signal<'success' | 'error' | null>(null);
+  readonly dialogResult = signal<DialogStatus>(null);
 
   openDialog(): void {
     const dialogRef = this.dialog.open(FeedbackDialogComponent, {

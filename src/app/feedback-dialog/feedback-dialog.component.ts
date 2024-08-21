@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   FormControl,
   FormGroup,
@@ -6,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { filter, tap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {
@@ -19,12 +21,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FeedbackDialogService } from './feedback-dialog.service';
 
 @Component({
   selector: 'feedback-dialog',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatDialogActions,
@@ -45,9 +49,7 @@ export class FeedbackDialogComponent {
   readonly snackBar = inject(MatSnackBar);
   readonly feedbackService = inject(FeedbackDialogService);
 
-  readonly status = signal<'initial' | 'pending' | 'success' | 'error'>(
-    'initial'
-  );
+  readonly status = toSignal(this.feedbackService.getStatus());
 
   readonly feedbackForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -60,26 +62,26 @@ export class FeedbackDialogComponent {
 
   onSubmit(): void {
     if (this.feedbackForm.valid) {
-      this.status.set('pending');
       this.feedbackService
         .sendFeedback({
           name: this.feedbackForm.value.name!,
           feedback: this.feedbackForm.value.feedback!,
           satisfaction: this.feedbackForm.value.satisfaction!,
         })
-        .subscribe((response) => {
-          if (response.status === 'success') {
-            this.status.set('success');
-            this.dialogRef.close(this.status());
-            this.snackBar.open('Thank you for your feedback!');
-          } else {
-            this.status.set('error');
-            this.dialogRef.close(this.status());
-            this.snackBar.open(
-              'An error occurred while sending your feedback.'
-            );
-          }
-        });
+        .pipe(
+          tap(() => {
+            if (this.status() === 'success') {
+              this.snackBar.open('Thank you for your feedback!');
+              this.dialogRef.close('success');
+            } else {
+              this.snackBar.open(
+                'An error occurred while sending your feedback.'
+              );
+              this.dialogRef.close('error');
+            }
+          })
+        )
+        .subscribe();
     }
   }
 }
